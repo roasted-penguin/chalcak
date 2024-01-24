@@ -26,6 +26,12 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	
+	implementation 'jakarta.validation:jakarta.validation-api'
+    implementation 'org.hibernate.validator:hibernate-validator'
+	
 }
 
 tasks.named('test') {
