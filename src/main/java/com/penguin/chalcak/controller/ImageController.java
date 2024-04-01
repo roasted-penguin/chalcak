@@ -11,12 +11,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/image")
+@RequestMapping("/api/v1/image")
 public class ImageController {
     private final ImageService imageService;
 
     @PostMapping
-    public ResponseEntity<?> convertImageToText(@RequestBody MultipartFile image){
-        return ResponseEntity.ok().body(imageService.extractText(image));
+    public ResponseEntity<?> convertImageToText(@RequestBody String imageUrl){
+        return ResponseEntity.ok().body(imageService.extractText(imageUrl));
     }
 }

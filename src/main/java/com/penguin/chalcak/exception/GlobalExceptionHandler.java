@@ -10,6 +10,7 @@ import com.penguin.chalcak.exception.dto.ErrorResponse;
 
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @Slf4j
 @RestControllerAdvice
@@ -28,9 +29,15 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<?> handle(MethodArgumentNotValidException ex){
 		return responseEntityOf(ApplicationErrorType.METHOD_ARGUMENT_NOT_VALID_EXCEPTION);
 	}
+
+	@ExceptionHandler(NoResourceFoundException.class)
+	public ResponseEntity<?> handle(NoResourceFoundException ex){
+		return responseEntityOf(ApplicationErrorType.NO_RESOURCE_EXCEPTION);
+	}
 	
 	@ExceptionHandler(Exception.class)
-	public ResponseEntity<?> handle(Exception exception){
+	public ResponseEntity<?> handle(Exception ex){
+		ex.printStackTrace();
 		return responseEntityOf(ApplicationErrorType.UNHANDLED_EXCEPTION);
 	}
 	

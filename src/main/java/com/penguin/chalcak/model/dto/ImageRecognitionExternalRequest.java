@@ -8,7 +8,8 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-public class ImageRecognitionRequest {
+@ToString
+public class ImageRecognitionExternalRequest {
     private String version;
     private String requestId;
     private long timestamp;
@@ -20,6 +21,7 @@ public class ImageRecognitionRequest {
     @Getter
     @Setter
     @Builder
+    @ToString
     public static class Image {
         private String format;
         private String url;
