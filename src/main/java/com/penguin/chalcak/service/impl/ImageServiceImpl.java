@@ -4,13 +4,16 @@ import com.penguin.chalcak.exception.ApplicationErrorType;
 import com.penguin.chalcak.exception.ApplicationException;
 import com.penguin.chalcak.model.dto.ImageRecognitionExternalRequest;
 import com.penguin.chalcak.model.dto.ImageRecognitionExternalResponse;
+import com.penguin.chalcak.model.dto.ImageRecognitionInternalRequest;
 import com.penguin.chalcak.model.dto.ImageRecognitionInternalResponse;
 import com.penguin.chalcak.service.ImageService;
+import com.penguin.chalcak.util.ImageUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -19,13 +22,15 @@ import java.io.IOException;
 import java.util.Base64;
 import java.util.List;
 
+import static com.penguin.chalcak.util.ImageUtil.multiPartFileBase64Encoder;
+
 @Service
 @RequiredArgsConstructor
 public class ImageServiceImpl implements ImageService {
     private final String INVOKE_URL = "https://1dcl38fgey.apigw.ntruss.com/custom/v1/27690/4360176bb005456207aa42b5b328426fa58b52e1fbfa65da1b28badb875a006f/general";
-    private final String IMAGE_ACCOUNT = "계좌번호.jpeg";
+//    private final String IMAGE_ACCOUNT = "계좌번호.jpeg";
 
-    public ImageRecognitionInternalResponse extractText(String imageUrl){
+    public ImageRecognitionInternalResponse extractText(MultipartFile imageFile){
         //header
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-type","application/json");
@@ -34,21 +39,35 @@ public class ImageServiceImpl implements ImageService {
         headers.set("X-OCR-SECRET",clientSecretKey);
 
         String base64Image = "";
+
+//        MultipartFile imageFile = imageRecognitionInternalRequest.image();
         try{
-            File imageFile = ResourceUtils.getFile("classpath:static/" + IMAGE_ACCOUNT);
-            FileInputStream fis = new FileInputStream(imageFile);
-            byte[] bytesArray = new byte[(int) imageFile.length()];
-            fis.read(bytesArray);
-            fis.close();
-
-            // Base64로 인코딩
-            base64Image = Base64.getEncoder().encodeToString(bytesArray);
-
-        } catch (FileNotFoundException e){
-            e.printStackTrace();
+            base64Image = multiPartFileBase64Encoder(imageFile);
         } catch (IOException e){
             e.printStackTrace();
         }
+
+        //image의 type알기
+        String imageContentType = imageFile.getContentType();
+        assert imageContentType != null;
+        int slashIndex = imageContentType.indexOf('/');
+        String format = imageContentType.substring(slashIndex+1);
+
+//        try{
+//            File imageFile = ResourceUtils.getFile("classpath:static/" + IMAGE_ACCOUNT);
+//            FileInputStream fis = new FileInputStream(imageFile);
+//            byte[] bytesArray = new byte[(int) imageFile.length()];
+//            fis.read(bytesArray);
+//            fis.close();
+//
+//            // Base64로 인코딩
+//            base64Image = Base64.getEncoder().encodeToString(bytesArray);
+//
+//        } catch (FileNotFoundException e){
+//            e.printStackTrace();
+//        } catch (IOException e){
+//            e.printStackTrace();
+//        }
 
         //body
         /**
@@ -56,10 +75,10 @@ public class ImageServiceImpl implements ImageService {
          그래야 url 확정 가능(원격 url 필요)
          우선은 하드코딩으로 url 박기
          **/
-        imageUrl = "https://lettercounter.net/wp-content/uploads/2021/03/lettercounter.png";
-
-        String[] imageUrlSplit = imageUrl.split("\\.");
-        String format = imageUrlSplit[imageUrlSplit.length-1];
+//        String imageUrl = "https://lettercounter.net/wp-content/uploads/2021/03/lettercounter.png";
+//
+//        String[] imageUrlSplit = imageUrl.split("\\.");
+//        String format = imageUrlSplit[imageUrlSplit.length-1];
 
         ImageRecognitionExternalRequest imageRecognitionExternalRequest = ImageRecognitionExternalRequest.builder()
                 .version("V2")
