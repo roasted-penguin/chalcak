@@ -1,5 +1,6 @@
 package com.penguin.chalcak.service.impl;
 
+import com.penguin.chalcak.config.ClovaOcrConfig;
 import com.penguin.chalcak.exception.ApplicationErrorType;
 import com.penguin.chalcak.exception.ApplicationException;
 import com.penguin.chalcak.model.dto.ImageRecognitionExternalRequest;
@@ -9,6 +10,7 @@ import com.penguin.chalcak.model.dto.ImageRecognitionInternalResponse;
 import com.penguin.chalcak.service.ImageService;
 import com.penguin.chalcak.util.ImageUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
@@ -34,8 +36,8 @@ public class ImageServiceImpl implements ImageService {
         //header
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-type","application/json");
-        /**jasypt**/
-        String clientSecretKey = "";//
+
+        String clientSecretKey = new ClovaOcrConfig().getClientSecretKey();
         headers.set("X-OCR-SECRET",clientSecretKey);
 
         String base64Image = "";

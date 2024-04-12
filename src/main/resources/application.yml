@@ -1,0 +1,6 @@
+jasypt:
+  encryptor:
+    password: dummy
+
+clovaocr:
+  key: ENC(EPF1BvVtWbZ6WprH28Hz+0HMCBUzBnO0435V2I4rno+eDXN4GZYiYsZmc9rZCrJwrkAWVej4vmA=)
